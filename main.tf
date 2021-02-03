@@ -8,11 +8,6 @@ variable "server_port" {
     default     = 8080
 }
 
-output "public_ip" {
-    value       = aws_instance.example.public_ip
-    description = "The public IP address of the web server"
-}
-
 resource "aws_launch_configuration" "example" {
     image_id          = "ami-0c55b159cbfafe1f0"
     instance_type = "t2.micro"
@@ -29,14 +24,14 @@ resource "aws_launch_configuration" "example" {
     lifecycle {
         create_before_destroy = true
     }
-
-    tags = {
-        Name = "terraform-example"
-    }
 }
 
 data "aws_vpc" "default" {
     default = true
+}
+
+data "aws_subnet_ids" "default" {
+    vpc_id = data.aws_vpc.default.id
 }
 
 resource "aws_autoscaling_group" "example" {

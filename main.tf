@@ -24,8 +24,27 @@ resource "aws_launch_configuration" "example" {
                 nohup busybox httpd -f -p ${var.server_port} &
                 EOF
 
+    # Required when using a launch configuration with an auto scaling group.
+    # https://www.terraform.io/docs/providers/aws/r/launch_configuration.html
+    lifecycle {
+        create_before_destroy = true
+    }
+
     tags = {
         Name = "terraform-example"
+    }
+}
+
+resource "aws_autoscaling_group" "example" {
+    launch_configuration  = aws_launch_configuration.example.name
+
+    min_size = 2
+    max_size = 10
+
+    tag {
+        key                 = "Name"
+        value               = "terraform-asg-example"
+        propagate_at_launch = true
     }
 }
 

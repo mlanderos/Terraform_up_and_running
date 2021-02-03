@@ -35,6 +35,10 @@ resource "aws_launch_configuration" "example" {
     }
 }
 
+data "aws_vpc" "default" {
+    default = true
+}
+
 resource "aws_autoscaling_group" "example" {
     launch_configuration  = aws_launch_configuration.example.name
 

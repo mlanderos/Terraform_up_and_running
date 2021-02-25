@@ -2,12 +2,6 @@ provider "aws" {
     region = "us-east-2"
 }
 
-variable "server_port" {
-    description = "The port the server will use for HTTP requests"
-    type        = number
-    default     = 8080
-}
-
 resource "aws_launch_configuration" "example" {
     image_id          = "ami-0c55b159cbfafe1f0"
     instance_type = "t2.micro"
